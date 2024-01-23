@@ -18,12 +18,11 @@ class CoreBuild extends StatelessWidget {
   final BoxConstraints? constraints;
 
   EdgeInsetsGeometry? get _paddingIncludingDecoration {
-    if (decoration == null || decoration!.padding == null)
-      return styleModel?.padding;
-    final EdgeInsetsGeometry? decorationPadding = decoration!.padding;
+    if (decoration?.padding == null) return styleModel?.padding;
+    final decorationPadding = decoration!.padding;
     if (styleModel?.padding == null) return decorationPadding;
-    final EdgeInsetsGeometry padding = styleModel!.padding!;
-    return padding.add(decorationPadding!);
+    final padding = styleModel!.padding!;
+    return padding.add(decorationPadding);
   }
 
   @override
@@ -46,7 +45,6 @@ class CoreBuild extends StatelessWidget {
     if (effectivePadding != null)
       widgetTree = Padding(padding: effectivePadding, child: widgetTree);
 
-    // ignore: missing_enum_constant_in_switch
     switch (styleModel?.overflow) {
       case OverflowType.scroll:
         widgetTree = SingleChildScrollView(
@@ -68,6 +66,8 @@ class CoreBuild extends StatelessWidget {
                 ? double.infinity
                 : null,
             alignment: styleModel?.alignmentContent ?? Alignment.topCenter);
+        break;
+      case null:
         break;
     }
 
@@ -97,7 +97,7 @@ class CoreBuild extends StatelessWidget {
 
     if (styleModel?.backgroundBlur != null) {
       widgetTree = ClipRRect(
-        borderRadius: decoration?.borderRadius as BorderRadius?,
+        borderRadius: decoration?.borderRadius ?? BorderRadius.circular(0.0),
         child: BackdropFilter(
           filter: ImageFilter.blur(
             sigmaX: styleModel!.backgroundBlur!,
